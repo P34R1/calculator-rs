@@ -18,7 +18,7 @@ pub struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
-    fn new(input: &str) -> Self {
+    pub fn new(input: &str) -> Self {
         // Remove spaces
         let input_no_spaces: &'a str = Box::leak(input.replace(' ', "").into_boxed_str());
 
@@ -52,6 +52,21 @@ impl<'a> Lexer<'a> {
             None => Token::Eof,
         }
     }
+
+    pub fn get_tokens(&mut self) -> Vec<Token> {
+        let mut tokens = Vec::new();
+
+        loop {
+            let token = self.next_token();
+            if token != Token::Eof {
+                tokens.push(token);
+            } else {
+                break;
+            }
+        }
+
+        tokens
+    }
 }
 
 #[cfg(test)]
@@ -79,16 +94,8 @@ mod tests {
         ];
 
         let mut lexer = Lexer::new(input);
-        let mut actual_tokens = Vec::new();
 
-        loop {
-            let token = lexer.next_token();
-            if token != Token::Eof {
-                actual_tokens.push(token);
-            } else {
-                break;
-            }
-        }
+        let actual_tokens = lexer.get_tokens();
 
         assert_eq!(actual_tokens, expected_tokens);
     }
