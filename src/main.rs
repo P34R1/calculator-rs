@@ -1,12 +1,16 @@
-#![allow(dead_code, unused_variables, unused_imports)]
-
 mod calculator;
-use crate::calculator::calculate;
+use calculator::calculate;
+
+use std::io::{stdin, stdout, Write};
 
 fn main() {
-    println!("Hello, world!");
+    print!("Enter Your Equation\n> ");
+    Write::flush(&mut stdout()).expect("Failed to flush stdout");
 
-    // Get equation
+    let mut equation = String::new();
+    stdin()
+        .read_line(&mut equation)
+        .expect("Failed to read line");
 
-    // calculate(equation)
+    println!("{}", calculate(equation.trim()));
 }
