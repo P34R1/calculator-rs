@@ -1,12 +1,34 @@
 mod lexer;
 mod parser;
 
-pub fn calculate(equation: String) -> f64 {
-    // Lexer Logic
+use lexer::Lexer;
+use parser::Parser;
 
-    // Parser Logic
+pub fn calculate(equation: &str) -> f64 {
+    let mut lexer = Lexer::new(equation);
+    let binding = lexer.get_tokens();
 
-    // Return Value
+    let mut parser = Parser::new(&binding);
+    parser.parse_expression()
+}
 
-    0.0
+#[cfg(test)]
+mod tests {
+    use crate::calculator::calculate;
+
+    #[test]
+    fn test_calculate() {
+        let inputs = [
+            "3.2 + 5 * (10 - (2 + 3))",
+            "32 - 7 * (104 / 2 + 3)",
+            "6 * 4 - (10 - 2) / 2",
+            "((312) + 32 * 0.5) - 14 / 2",
+        ];
+
+        let expected_answers = [28.2, -353.0, 20.0, 321.0];
+
+        for (input, expected_answer) in inputs.iter().zip(expected_answers.iter()) {
+            assert_eq!(expected_answer, &calculate(input));
+        }
+    }
 }
